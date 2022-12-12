@@ -16,6 +16,7 @@ namespace RestaurantAPI.Controllers
         public RestaurantController(RestaurantDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper= mapper;
         }
 
         [HttpGet]
@@ -28,25 +29,26 @@ namespace RestaurantAPI.Controllers
                  .ToList();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            
+
             return Ok(restaurantsDtos);
         }
 
         [HttpGet("{id}")]
         public ActionResult<RestaurantDto> Get([FromRoute]int id)
         {
-            var restaurants = _dbContext
+            var restaurant = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
                 .FirstOrDefault(r => r.Id == id);
             
-            if(restaurants is null)
+            if (restaurant is null)
             {
                 return NotFound();
             }
-            var restaurantsDtos = _mapper.Map<RestaurantDto>(restaurants);
-            return Ok(restaurantsDtos);
+
+            var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
+            return Ok(restaurantDto);
         }
     }
 }
