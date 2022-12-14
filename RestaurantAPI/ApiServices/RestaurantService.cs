@@ -7,6 +7,7 @@ using RestaurantAPI.ApiServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RestaurantAPI.ApiServices
 {
@@ -15,6 +16,7 @@ namespace RestaurantAPI.ApiServices
         RestaurantDto GetById(int id);
         IEnumerable<RestaurantDto> GetAll();
         int Create(CreateRestaurantDto dto);
+        bool Delete(int id);
     }
     public class RestaurantService : IRestaurantService
     {
@@ -25,6 +27,20 @@ namespace RestaurantAPI.ApiServices
         {
             _dbContext = dbContext;
             _mapper = mapper;
+        }
+
+        public bool Delete(int id)
+        {
+            var restaurant = _dbContext.Restaurants
+                .Include(r => r.Address)
+                .Include(r => r.Dishes)
+                .FirstOrDefault(r => r.Id == id);
+
+            if (restaurant is null) return false;
+            _dbContext.Restaurants.Remove(restaurant);
+            _dbContext.SaveChanges();
+            return true;
+
         }
         public RestaurantDto GetById(int id)
         {
