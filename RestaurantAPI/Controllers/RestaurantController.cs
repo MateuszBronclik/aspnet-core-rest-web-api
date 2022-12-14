@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using RestaurantAPI.ApiServices;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
@@ -13,28 +14,46 @@ namespace RestaurantAPI.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        
-        public RestaurantController(IRestaurantService restaurantService) 
+
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            _restaurantService = restaurantService; 
+            _restaurantService = restaurantService;
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute]int id) 
+
+
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdateResturantDto dto, [FromRoute] int id)
         {
-           var  isDeleted = _restaurantService.Delete(id);
-            if (isDeleted) 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var isUpdated = _restaurantService.Update(id, dto);
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _restaurantService.Delete(id);
+            if (isDeleted)
             {
                 return NoContent();
             }
             return NotFound();
-            
         }
 
         [HttpPost]
-        public ActionResult CreateRestaurant([FromBody]CreateRestaurantDto dto)
+        public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -50,10 +69,10 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<RestaurantDto> Get([FromRoute]int id)
+        public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);
-            
+
             if (restaurant is null)
             {
                 return NotFound();
@@ -62,3 +81,4 @@ namespace RestaurantAPI.Controllers
         }
     }
 }
+
