@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using Microsoft.Extensions.Logging;
 
 namespace RestaurantAPI.ApiServices
 {
@@ -26,9 +27,11 @@ namespace RestaurantAPI.ApiServices
     {
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<RestaurantService> _logger;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper) 
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger) 
         {
+            _logger = logger;
             _dbContext = dbContext;
             _mapper = mapper;
         }
@@ -53,6 +56,7 @@ namespace RestaurantAPI.ApiServices
 
         public bool Delete(int id)
         {
+            _logger.LogError($"Restautant with id: {id} DELETE action invoked");
             var restaurant = _dbContext.Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
