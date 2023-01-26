@@ -6,7 +6,7 @@ namespace RestaurantAPI.Entities
     public class RestaurantDbContext : DbContext
     {
         private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=RestaurantDb;Trusted_Connection=True;";
-        
+
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Dish> Dishes { get; set; }
@@ -19,7 +19,7 @@ namespace RestaurantAPI.Entities
                 .HasMaxLength(25);
 
             modelBuilder.Entity<Dish>().Property(d => d.Name)
-                .IsRequired(); 
+                .IsRequired();
 
             modelBuilder.Entity<Address>().Property(a => a.City)
                 .IsRequired()
