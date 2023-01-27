@@ -30,7 +30,7 @@ namespace RestaurantAPI.ApiServices
         private readonly IMapper _mapper;
         private readonly ILogger<RestaurantService> _logger;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger) 
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -44,7 +44,7 @@ namespace RestaurantAPI.ApiServices
                 .FirstOrDefault(r => r.Id == id);
 
             if (restaurant is null)
-               throw new NotFoundException("Restaurant not found");
+                throw new NotFoundException("Restaurant not found");
 
             restaurant.Name = dto.Name;
             restaurant.Description = dto.Description;
@@ -75,13 +75,13 @@ namespace RestaurantAPI.ApiServices
                 .Include(r => r.Dishes)
                 .FirstOrDefault(r => r.Id == id);
 
-            if (restaurant is null) 
+            if (restaurant is null)
                 throw new NotFoundException("Restaurant not found");
             var result = _mapper.Map<RestaurantDto>(restaurant);
             return result;
 
         }
-        public IEnumerable<RestaurantDto> GetAll() 
+        public IEnumerable<RestaurantDto> GetAll()
         {
             var restaurants = _dbContext
                 .Restaurants
@@ -90,7 +90,6 @@ namespace RestaurantAPI.ApiServices
                 .ToList();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            
             return restaurantsDtos;
         }
 
