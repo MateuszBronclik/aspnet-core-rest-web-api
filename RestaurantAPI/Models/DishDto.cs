@@ -1,4 +1,6 @@
-﻿namespace RestaurantAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RestaurantAPI.Models
 {
     public class DishDto
     {

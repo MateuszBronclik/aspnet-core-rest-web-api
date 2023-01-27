@@ -11,6 +11,8 @@ namespace RestaurantAPI.ApiServices
     {
         int Create(int restaurantID, CreateDishDto dto);
     }
+
+
     public class DishService : IDishService
     {
         
@@ -29,14 +31,10 @@ namespace RestaurantAPI.ApiServices
             var restaurant = _context.Restaurants.FirstOrDefault(r => r.Id == restaurantID);
             if (restaurant is null)
                 throw new NotFoundException("Restaurant not found");
-               
-                var dishEntity = _mapper.Map<Dish>(dto);
-            
-                dishEntity.RestaurantId = restaurantID;
-            
-                _context.Dishes.Add(dishEntity);
-                _context.SaveChanges();
 
+            var dishEntity = _mapper.Map<Dish>(dto);
+            _context.Dishes.Add(dishEntity);
+            _context.SaveChanges();
 
             return dishEntity.Id;
         }
