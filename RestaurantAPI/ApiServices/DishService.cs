@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
 using RestaurantAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,6 +15,8 @@ namespace RestaurantAPI.ApiServices
         int Create(int restaurantId, CreateDishDto dto);
         DishDto GetById(int restaurantId, int dishId);
         List<DishDto> GetAll(int restaurantId);
+        void RemoveAll(int restaurantId);
+        void RemoveDishById(int restaurantId, int dishId);
     }
 
 
@@ -31,9 +34,7 @@ namespace RestaurantAPI.ApiServices
 
         public int Create(int restaurantId, CreateDishDto dto)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
-            if (restaurant is null)
-                throw new NotFoundException("Restaurant not found");
+            var restaurant = GetRestaurantById(restaurantId);
 
             var dishEntity = _mapper.Map<Dish>(dto);
 
@@ -44,22 +45,44 @@ namespace RestaurantAPI.ApiServices
 
             return dishEntity.Id;
         }
+ 
 
         public DishDto GetById(int restaurantId, int dishId)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
-            if (restaurant is null)
-                throw new NotFoundException("Restaurant not found");
+            var restaurant = GetRestaurantById(restaurantId);
 
-            var dish = _context.Dishes.FirstOrDefault(d => d.Id == dishId);
-            if (dish is null || dish.RestaurantId != restaurantId)
-            {
-                throw new NotFoundException("Dish not found");
-            }
+            var dish = GetDishById(dishId,restaurantId);
+
             var dishDto = _mapper.Map<DishDto>(dish);
             return dishDto; 
         }
+
+       
+
         public List<DishDto> GetAll(int restaurantId)
+        {
+            var restaurant = GetRestaurantById(restaurantId);
+            var dishDtos = _mapper.Map<List<DishDto>>(restaurant.Dishes);
+            return dishDtos;
+        }
+        public void RemoveAll(int restaurantId)
+        {
+            var restaurant = GetRestaurantById(restaurantId);
+            _context.RemoveRange(restaurant.Dishes);
+            _context.SaveChanges();
+        }
+
+       
+        public void RemoveDishById(int restaurantId, int dishId)
+        {
+            var restaurant = GetRestaurantById(restaurantId);
+            var dish = GetDishById(dishId, restaurantId);
+
+            _context.RemoveRange(dish);
+            _context.SaveChanges();
+        }
+
+        private Restaurant GetRestaurantById(int restaurantId)
         {
             var restaurant = _context
                 .Restaurants
@@ -67,9 +90,19 @@ namespace RestaurantAPI.ApiServices
                 .FirstOrDefault(r => r.Id == restaurantId);
             if (restaurant is null)
                 throw new NotFoundException("Restaurant not found");
-            var dishDtos = _mapper.Map<List<DishDto>>(restaurant.Dishes);
-            return dishDtos;
+            return restaurant;
         }
 
+        private Dish GetDishById(int dishId, int restaurantId)
+        {
+            var dish = _context
+                .Dishes
+                .FirstOrDefault(d => d.Id == dishId);
+            if (dish is null || dish.RestaurantId != restaurantId)
+            {
+                throw new NotFoundException("Dish not found");
+            }
+            return dish;
+        }
     }
 }
