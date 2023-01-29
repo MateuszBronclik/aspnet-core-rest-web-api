@@ -44,7 +44,6 @@ namespace RestaurantAPI.Controllers
             return NoContent();
         }
 
-        // 
         [HttpDelete("{dishId}")]
         public ActionResult DeleteDishById([FromRoute] int restaurantId, [FromRoute] int dishId)
         {
