@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
-using RestaurantAPI.ApiServices;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using Microsoft.Extensions.Logging;
 using RestaurantAPI.Exceptions;
 
