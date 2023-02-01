@@ -71,7 +71,7 @@ namespace RestaurantAPI.ApiServices
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
-
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         }
     }
 }
