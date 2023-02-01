@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using RestaurantAPI.Entities;
 using System.Linq;
 
