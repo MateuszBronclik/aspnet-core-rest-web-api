@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.ApiServices;
 using RestaurantAPI.Models;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace RestaurantAPI.Controllers
 {
@@ -48,7 +49,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet]
-        
+        [Authorize(Policy = "HasNationality")]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
@@ -56,7 +57,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);

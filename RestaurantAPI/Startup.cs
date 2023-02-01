@@ -52,7 +52,10 @@ namespace RestaurantAPI
                 };
             });
 
-
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+            });
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<RestaurantDbContext>();
             services.AddScoped<RestaurantSeeder>();
@@ -88,9 +91,7 @@ namespace RestaurantAPI
             });
 
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
