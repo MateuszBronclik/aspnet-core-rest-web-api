@@ -20,35 +20,16 @@ namespace RestaurantAPI.Controllers
             _restaurantService = restaurantService;
         }
 
-
-
-        [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateResturantDto dto, [FromRoute] int id)
-        {
-            _restaurantService.Update(id, dto);
-            return Ok();
-        }
-
-
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id)
-        {
-            _restaurantService.Delete(id);
-            return NotFound();
-        }
-
         [HttpPost]
-        [Authorize(Roles = ("Admin,Manger"))]
-       
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            
             var id = _restaurantService.Create(dto);
             return Created($"/api/restaurant/{id}", null);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         [Authorize(Policy = "HasNationality")]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
@@ -62,6 +43,18 @@ namespace RestaurantAPI.Controllers
         {
             var restaurant = _restaurantService.GetById(id);
             return Ok(restaurant);
+        }
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdateResturantDto dto, [FromRoute] int id)
+        {
+            _restaurantService.Update(id, dto);
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            _restaurantService.Delete(id);
+            return NotFound();
         }
     }
 }

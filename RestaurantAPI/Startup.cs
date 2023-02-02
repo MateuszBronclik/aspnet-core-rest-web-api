@@ -52,10 +52,12 @@ namespace RestaurantAPI
                 };
             });
 
-            services.AddAuthorization(option =>
+            services.AddAuthorization(options =>
             {
-                option.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
             });
+
+
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<RestaurantDbContext>();
             services.AddScoped<RestaurantSeeder>();
