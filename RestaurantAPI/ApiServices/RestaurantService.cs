@@ -9,6 +9,8 @@ using RestaurantAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantAPI.Properties.Authorization;
+using System;
+using System.Linq.Expressions;
 
 namespace RestaurantAPI.ApiServices
 {
@@ -42,7 +44,7 @@ namespace RestaurantAPI.ApiServices
 
         public void Update(int id, UpdateResturantDto dto)
         {
-            
+
 
             var restaurant = _dbContext
                 .Restaurants
@@ -114,15 +116,31 @@ namespace RestaurantAPI.ApiServices
                 .Where(r => query.SearchPhrase == null || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower()) ||
                 r.Description.ToLower().Contains(query.SearchPhrase.ToLower())));
 
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Restaurant, object>>>
+                {
+                     {nameof(Restaurant.Name), r => r.Name},
+                     {nameof(Restaurant.Description), r => r.Description},
+                     {nameof(Restaurant.Category), r => r.Category}
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                baseQuery = query.SortDirection == SortDirection.ASC
+                    ? baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+            }
+
             var restaurants = baseQuery
-                .Skip(query.PageSize * (query.PageNumber -1))
+                .Skip(query.PageSize * (query.PageNumber - 1))
                 .Take(query.PageSize)
                 .ToList();
 
-           var totalItemsCount = baseQuery.Count();
+            var totalItemsCount = baseQuery.Count();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            var result = new PageResult<RestaurantDto>(restaurantsDtos,totalItemsCount, query.PageSize, query.PageNumber);
+            var result = new PageResult<RestaurantDto>(restaurantsDtos, totalItemsCount, query.PageSize, query.PageNumber);
             return result;
         }
 
