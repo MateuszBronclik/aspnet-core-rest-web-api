@@ -20,5 +20,5 @@ jobs:
         run: dotnet restore
       - name: Build with dotnet
         working-directory: aspnet-core-rest-web-api/RestaurantAPI
-        run: dotnet build RestaurantAPI.csproj --no-restore
+        run: dotnet build --no-restore
       
