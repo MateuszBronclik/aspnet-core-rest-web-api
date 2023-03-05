@@ -20,5 +20,5 @@ jobs:
         run: dotnet restore
       - name: Build Project
         run: dotnet build --no-restore
-        working-directory: src/RestaurantAPI
+        working-directory: RestaurantAPI
   
