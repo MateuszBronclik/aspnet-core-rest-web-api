@@ -18,6 +18,6 @@ jobs:
           dotnet-version: 7.0
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
-        run: msbuild RestaurantAPI.csproj
+      - name: Build with dotnet
+        run: dotnet build RestaurantAPI.csproj --no-restore
         working-directory: aspnet-core-rest-web-api/RestaurantAPI
