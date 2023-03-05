@@ -80,12 +80,12 @@ namespace RestaurantAPI
                     {
                         new Dish()
                         {
-                            Name = "Hot Chilli Poops",
+                            Name = "Hot Chilli Wings",
                             Price= 15.45m,
                         },
                         new Dish()
                         {
-                            Name ="Spicy Boobi Poops",
+                            Name ="Spicy Stripes",
                             Price= 12.99m,
 
                         },
