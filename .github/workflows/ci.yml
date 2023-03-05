@@ -18,8 +18,8 @@ jobs:
           dotnet-version: 7.0
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build Project
-        run: dotnet build --no-restore
-      - name : Build  
+      - name: Build Project 
         run: msbuild RestaurantAPI.csproj
+      - name : Build 
+        run: dotnet build --no-restore
   
