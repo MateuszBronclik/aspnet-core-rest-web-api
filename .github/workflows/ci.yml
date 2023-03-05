@@ -20,5 +20,6 @@ jobs:
         run: dotnet restore
       - name: Build Project
         run: dotnet build --no-restore
-        working-directory: D:\Programowanie\aspnet-core-rest-web-api\RestaurantAPI
+      - name : Build  
+        run: msbuild RestaurantAPI.csproj
   
