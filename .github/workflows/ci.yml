@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest                         
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core SDK
@@ -18,8 +18,7 @@ jobs:
           dotnet-version: 7.0
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build Project 
+      - name: Build
         run: msbuild RestaurantAPI.csproj
-      - name : Build 
-        run: dotnet build --no-restore
-  
+        working-directory: RestaurantAPI
+
