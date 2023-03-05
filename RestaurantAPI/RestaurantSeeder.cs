@@ -1,4 +1,5 @@
-﻿using RestaurantAPI.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,23 +13,34 @@ namespace RestaurantAPI
         {
             _dbContext = dbContext;
         }
-        public void Seed() 
+        public void Seed()
         {
             if (_dbContext.Database.CanConnect())
             {
-                if (!_dbContext.Roles.Any())
+                var pendingMigrations = _dbContext.Database.GetPendingMigrations();
+                if (pendingMigrations != null && pendingMigrations.Any())
                 {
-                    var roles = GetRoles();
-                    _dbContext.Roles.AddRange(roles);
-                    _dbContext.SaveChanges();
+                    _dbContext.Database.Migrate();
                 }
-                if (!_dbContext.Restaurants.Any())
+
+                if (_dbContext.Database.CanConnect())
                 {
-                    var restaurants = GetRestaurants();
-                    _dbContext.Restaurants.AddRange(restaurants);
-                    _dbContext.SaveChanges();
+                    if (!_dbContext.Roles.Any())
+                    {
+                        var roles = GetRoles();
+                        _dbContext.Roles.AddRange(roles);
+                        _dbContext.SaveChanges();
+                    }
+                    if (!_dbContext.Restaurants.Any())
+                    {
+                        var restaurants = GetRestaurants();
+                        _dbContext.Restaurants.AddRange(restaurants);
+                        _dbContext.SaveChanges();
+                    }
                 }
             }
+
+
         }
         private IEnumerable<Role> GetRoles()
         {
@@ -119,7 +131,7 @@ namespace RestaurantAPI
 
             };
             return restaurants;
-            
+
         }
     }
 }
